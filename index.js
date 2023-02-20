@@ -1,8 +1,10 @@
 import express from 'express';
-import fs from 'fs';
+// import fs from 'fs';
 import multer from 'multer';
 import mongoose from 'mongoose';
 import cors from 'cors';
+
+const fs = require('@cyclic.sh/s3fs');
 
 import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
 
@@ -22,8 +24,8 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    if (!fs.existsSync('uploads')) {
-      fs.mkdirSync('uploads');
+    if (!fs.exists('uploads')) {
+      fs.mkdir('uploads');
     }
     cb(null, 'uploads');
   },
