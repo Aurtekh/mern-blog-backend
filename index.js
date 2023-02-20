@@ -3,8 +3,10 @@ import getFs from '@cyclic.sh/s3fs';
 import multer from 'multer';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import AWS from 'aws-sdk';
-const s3 = new AWS.S3();
+import { S3Client } from '@aws-sdk/client-s3';
+import multerS3 from 'multer-s3';
+
+const s3 = new S3Client();
 
 const fs = getFs(process.env.CYCLIC_BUCKET_NAME);
 
@@ -24,36 +26,30 @@ mongoose
   });
 const app = express();
 
-const upload = app.put('*', async (req, res) => {
-  let filename = req.path.slice(1);
-
-  console.log(typeof req.body);
-
-  await s3
-    .putObject({
-      Body: JSON.stringify(req.body),
-      Bucket: process.env.CYCLIC_BUCKET_NAME,
-      Key: filename,
-    })
-    .promise();
-
-  res.set('Content-type', 'text/plain');
-  res.send('ok').end();
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => {
+    if (!fs.exists('uploads')) {
+      fs.mkdir('uploads');
+    }
+    cb(null, 'uploads');
+  },
+  filename: (_, file, cb) => {
+    cb(null, file.originalname);
+  },
 });
 
-// const storage = multer.diskStorage({
-//   destination: (_, __, cb) => {
-//     if (!fs.exists(process.env.CYCLIC_BUCKET_NAME)) {
-//       fs.mkdir(process.env.CYCLIC_BUCKET_NAME);
-//     }
-//     cb(null, process.env.CYCLIC_BUCKET_NAME);
-//   },
-//   filename: (_, file, cb) => {
-//     cb(null, file.originalname);
-//   },
-// });
-
-// const upload = multer({ storage });
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'uploads',
+    metadata: function (req, file, cb) {
+      cb(null, { fieldName: file.fieldname });
+    },
+    key: function (req, file, cb) {
+      cb(null, Date.now().toString());
+    },
+  }),
+});
 
 app.use(express.json());
 app.use(cors());
@@ -63,7 +59,7 @@ app.post('/auth/login', loginValidation, handleValidationErrors, UserController.
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/auth/me', checkAuth, UserController.getMe);
 
-app.post('/upload', checkAuth, upload, (req, res) => {
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   res.json({
     url: `/uploads/${req.file.originalname}`,
   });
