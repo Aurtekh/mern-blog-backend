@@ -33,11 +33,12 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
-
+const corsOptions = {
+  origin: process.env.MONGODB_URI,
+};
 const upload = multer({ storage });
-
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
