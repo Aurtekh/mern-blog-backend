@@ -39,19 +39,10 @@ const whitelist = [
   'https://teal-poised-peacock.cyclic.app',
   'https://teal-poised-peacock.cyclic.app/uploads',
 ];
-const corsOptions = {
-  origin: (origin, cb) => {
-    if (whitelist.indexOf(origin) > -1 || !origin) {
-      cb(null, true);
-    } else {
-      cb(new Error('Запрещено CORS'));
-    }
-  },
-};
 
 const upload = multer({ storage });
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors({ origin: '*' }));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
