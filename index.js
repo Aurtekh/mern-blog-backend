@@ -24,9 +24,9 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    if (!fs.exists('uploads')) {
-      fs.mkdir('uploads');
-    }
+    // if (!fs.exists('uploads')) {
+    //   fs.mkdir('uploads');
+    // }
     cb(null, 'uploads');
   },
   filename: (_, file, cb) => {
