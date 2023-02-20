@@ -13,12 +13,12 @@ import { checkAuth, handleValidationErrors } from './utils/index.js';
 
 mongoose.set('strictQuery', false);
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(MONGODB_URI)
   .then(() => {
     console.log('DB OK');
   })
-  .catch(() => {
-    console.log('DB error');
+  .catch((err) => {
+    console.log('DB error', err);
   });
 const app = express();
 
@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
-app.use(cors({ origin: '*' }));
+app.use(cors({ origin: 'https://mern-blog-frontend-mauve.vercel.app' }));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
