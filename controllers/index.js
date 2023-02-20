@@ -1,2 +1,2 @@
-module.exports.UserController = require('./UserController.js');
-module.exports.PostController = require('./PostController.js');
+export * as UserController from './UserController.js';
+export * as PostController from './PostController.js';

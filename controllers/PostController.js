@@ -1,6 +1,6 @@
-const PostModel = require('../models/Post.js');
+import PostModel from '../models/Post.js';
 
-module.exports.getLastTags = async (req, res) => {
+export const getLastTags = async (req, res) => {
   try {
     const posts = await PostModel.find().limit(5).exec();
     const tags = posts
@@ -17,7 +17,7 @@ module.exports.getLastTags = async (req, res) => {
   }
 };
 
-module.exports.getAll = async (req, res) => {
+export const getAll = async (req, res) => {
   try {
     const posts = await PostModel.find().populate('user').exec();
 
@@ -30,7 +30,7 @@ module.exports.getAll = async (req, res) => {
   }
 };
 
-module.exports.getOne = async (req, res) => {
+export const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
 
@@ -69,7 +69,7 @@ module.exports.getOne = async (req, res) => {
   }
 };
 
-module.exports.remove = async (req, res) => {
+export const remove = async (req, res) => {
   try {
     const postId = req.params.id;
 
@@ -105,7 +105,7 @@ module.exports.remove = async (req, res) => {
   }
 };
 
-module.exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const doc = new PostModel({
       title: req.body.title,
@@ -126,7 +126,7 @@ module.exports.create = async (req, res) => {
   }
 };
 
-module.exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const postId = req.params.id;
 
