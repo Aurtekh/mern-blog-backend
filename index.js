@@ -33,9 +33,22 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   },
 });
+
+const whitelist = [
+  'https://teal-poised-peacock.cyclic.app/auth/me',
+  'https://teal-poised-peacock.cyclic.app',
+  'https://teal-poised-peacock.cyclic.app/uploads',
+];
 const corsOptions = {
-  origin: process.env.MONGODB_URI,
+  origin: (origin, cb) => {
+    if (whitelist.indexOf(origin) > -1 || !origin) {
+      cb(null, true);
+    } else {
+      cb(new Error('Запрещено CORS'));
+    }
+  },
 };
+
 const upload = multer({ storage });
 app.use(express.json());
 app.use(cors(corsOptions));
