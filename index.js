@@ -42,7 +42,7 @@ const whitelist = [
 
 const upload = multer({ storage });
 app.use(express.json());
-app.use(cors({ origin: 'https://teal-poised-peacock.cyclic.app' }));
+app.use(cors({ origin: 'https://mern-blog-frontend-mauve.vercel.app' }));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
