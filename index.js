@@ -11,7 +11,7 @@ import { registerValidation, loginValidation, postCreateValidation } from './val
 import { UserController, PostController } from './controllers/index.js';
 import { checkAuth, handleValidationErrors } from './utils/index.js';
 
-mongoose.set('strictQuery', true);
+mongoose.set('strictQuery', false);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
