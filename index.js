@@ -34,15 +34,19 @@ const storage = multer.diskStorage({
   },
 });
 
-const whitelist = [
-  'https://teal-poised-peacock.cyclic.app/auth/me',
-  'https://teal-poised-peacock.cyclic.app',
-  'https://teal-poised-peacock.cyclic.app/uploads',
-];
-
+const whitelist = ['https://mern-blog-frontend-mauve.vercel.app'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error());
+    }
+  },
+};
 const upload = multer({ storage });
 app.use(express.json());
-app.use(cors({ origin: 'https://mern-blog-frontend-mauve.vercel.app' }));
+app.use(cors(corsOptions));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
