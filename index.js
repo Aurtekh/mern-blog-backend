@@ -3,7 +3,8 @@ const multer = require('multer');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const fs = require('@cyclic.sh/s3fs')(process.env.CYCLIC_BUCKET_NAME);
+const getFs = require('@cyclic.sh/s3fs');
+const fs = getFs(process.env.CYCLIC_BUCKET_NAME);
 
 const { registerValidation, loginValidation, postCreateValidation } = require('./validations.js');
 
