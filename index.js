@@ -64,7 +64,7 @@ app.post('/upload', checkAuth, async (req, res) => {
 
   await s3
     .put({
-      Bucket: process.env.BUCKET,
+      Bucket: process.env.CYCLIC_BUCKET_NAME,
       Key: filename,
     })
     .promise();
