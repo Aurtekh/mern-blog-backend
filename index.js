@@ -1,15 +1,14 @@
-import express from 'express';
-// import fs from 'fs';
-import multer from 'multer';
-import mongoose from 'mongoose';
-import cors from 'cors';
+const express = require('express');
+const multer = require('multer');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-const fs = require('@cyclic.sh/s3fs');
+const fs = require('@cyclic.sh/s3fs')(process.env.CYCLIC_BUCKET_NAME);
 
-import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
+const { registerValidation, loginValidation, postCreateValidation } = require('./validations.js');
 
-import { UserController, PostController } from './controllers/index.js';
-import { checkAuth, handleValidationErrors } from './utils/index.js';
+const { UserController, PostController } = require('./controllers/index.js');
+const { checkAuth, handleValidationErrors } = require('./utils/index.js');
 
 mongoose.set('strictQuery', true);
 mongoose

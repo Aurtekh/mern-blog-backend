@@ -1,9 +1,9 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import { validationResult } from 'express-validator';
-import UserModel from '../models/User.js';
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { validationResult } = require('express-validator');
+const UserModel = require('../models/User.js');
 
-export const login = async (req, res) => {
+module.exports.login = async (req, res) => {
   try {
     const user = await UserModel.findOne({ email: req.body.email });
     if (!user) {
@@ -44,7 +44,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const register = async (req, res) => {
+module.exports.register = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -88,7 +88,7 @@ export const register = async (req, res) => {
   }
 };
 
-export const getMe = async (req, res) => {
+module.exports.getMe = async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId);
 
