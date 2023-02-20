@@ -106,6 +106,7 @@ export const remove = async (req, res) => {
 };
 
 export const create = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   try {
     const doc = new PostModel({
       title: req.body.title,
@@ -127,6 +128,7 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   try {
     const postId = req.params.id;
 
