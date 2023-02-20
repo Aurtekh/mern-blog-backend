@@ -3,10 +3,6 @@ import getFs from '@cyclic.sh/s3fs';
 import multer from 'multer';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { S3Client } from '@aws-sdk/client-s3';
-import multerS3 from 'multer-s3';
-
-const s3 = new S3Client();
 
 const fs = getFs(process.env.CYCLIC_BUCKET_NAME);
 
@@ -38,18 +34,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: 'uploads',
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now().toString());
-    },
-  }),
-});
+const upload = multer({ storage });
 
 app.use(express.json());
 app.use(cors());
@@ -59,27 +44,11 @@ app.post('/auth/login', loginValidation, handleValidationErrors, UserController.
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.get('/auth/me', checkAuth, UserController.getMe);
 
-app.post('/upload', checkAuth, async (req, res) => {
-  let filename = req.file.originalname;
-
-  await s3
-    .put({
-      Bucket: process.env.CYCLIC_BUCKET_NAME,
-      Key: filename,
-    })
-    .promise();
+app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   res.json({
-    url: `/uploads/${req.file.key}`,
+    url: `/uploads/${req.file.originalname}`,
   });
-  res.set('Content-type', 'text/plain');
-  res.send('ok').end();
 });
-
-// app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
-//   res.json({
-//     url: `/uploads/${req.file.key}`,
-//   });
-// });
 app.get('/tags', PostController.getLastTags);
 app.get('/posts', PostController.getAll);
 app.get('/posts/tags', PostController.getLastTags);
