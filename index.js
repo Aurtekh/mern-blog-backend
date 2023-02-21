@@ -1,10 +1,7 @@
 import express from 'express';
-import getFs from '@cyclic.sh/s3fs';
 import multer from 'multer';
 import mongoose from 'mongoose';
 import cors from 'cors';
-
-const fs = getFs(process.env.CYCLIC_BUCKET_NAME);
 
 import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
 
