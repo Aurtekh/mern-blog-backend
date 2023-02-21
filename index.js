@@ -24,9 +24,9 @@ const app = express();
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => {
-    if (!fs.exists('uploads')) {
-      fs.mkdir('uploads');
-    }
+    // if (!fs.exists('uploads')) {
+    //   fs.mkdir('uploads');
+    // }
     cb(null, 'uploads');
   },
   filename: (_, file, cb) => {
@@ -37,7 +37,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
