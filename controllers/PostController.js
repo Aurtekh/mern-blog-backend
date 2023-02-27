@@ -122,7 +122,7 @@ export const remove = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'https://mern-blog-frontend-mauve.vercel.app');
   try {
     const doc = new PostModel({
       title: req.body.title,
@@ -144,7 +144,7 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'https://mern-blog-frontend-mauve.vercel.app');
   try {
     const postId = req.params.id;
 
