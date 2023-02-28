@@ -33,6 +33,23 @@ export const getAll = async (req, res) => {
   }
 };
 
+export const getTagPosts = async (req, res) => {
+  const tagId = req.params.id;
+  try {
+    const posts = await PostModel.find({ tags: { $elemMatch: { tagId } } })
+      .sort({ createdAt: -1, updatedAt: -1 })
+      .populate('user')
+      .exec();
+
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить статью',
+    });
+  }
+};
+
 export const getPopular = async (req, res) => {
   try {
     const posts = await PostModel.find().sort({ viewsCount: -1 }).populate('user').exec();
