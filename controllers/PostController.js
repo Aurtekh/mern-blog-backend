@@ -34,9 +34,9 @@ export const getAll = async (req, res) => {
 };
 
 export const getTagPosts = async (req, res) => {
-  const tagId = req.params.id;
   try {
-    const posts = await PostModel.find({ tags: { $elemMatch: { tagId } } })
+    const tagId = req.params.id;
+    const posts = await PostModel.find({ 'tags': { $elemMatch: { 'react' } } })
       .sort({ createdAt: -1, updatedAt: -1 })
       .populate('user')
       .exec();
