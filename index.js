@@ -10,7 +10,10 @@ import { checkAuth, handleValidationErrors } from './utils/index.js';
 
 mongoose.set('strictQuery', false);
 mongoose
-  .connect(process.env.MONGODB_URI)
+  // .connect(process.env.MONGODB_URI)
+  .connect(
+    'mongodb+srv://admin:ReactBlog007@cluster0.bmhpdht.mongodb.net/blog?retryWrites=true&w=majority',
+  )
   .then(() => {
     console.log('DB OK');
   })
