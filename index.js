@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
 
-import { UserController, PostController } from './controllers/index.js';
+import { UserController, PostController, CommentController } from './controllers/index.js';
 import { checkAuth, handleValidationErrors } from './utils/index.js';
 
 mongoose.set('strictQuery', false);
@@ -64,6 +64,10 @@ app.patch(
   handleValidationErrors,
   PostController.update,
 );
+
+app.post('/comments/:id', checkAuth, handleValidationErrors, CommentController.create);
+app.get('/comments', CommentController.getLastComments);
+app.get('/comments/:id', CommentController.getThisPostComments);
 
 app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
