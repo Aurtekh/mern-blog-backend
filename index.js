@@ -10,10 +10,7 @@ import { checkAuth, handleValidationErrors } from './utils/index.js';
 
 mongoose.set('strictQuery', false);
 mongoose
-  // .connect(process.env.MONGODB_URI)
-  .connect(
-    'mongodb+srv://admin:ReactBlog007@cluster0.bmhpdht.mongodb.net/blog?retryWrites=true&w=majority',
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('DB OK');
   })
@@ -37,7 +34,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
-app.use(cors({ origin: 'https://mern-blog-frontend-mauve.vercel.app' }));
+app.use(cors({ origin: ['https://mern-blog-frontend-mauve.vercel.app', 'http://localhost:3000'] }));
 app.use('/uploads', express.static('uploads'));
 
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
@@ -65,9 +62,10 @@ app.patch(
   PostController.update,
 );
 
-app.post('/comments/:id', checkAuth, handleValidationErrors, CommentController.create);
-app.get('/comments', CommentController.getLastComments);
+app.post('/comments', checkAuth, handleValidationErrors, CommentController.create);
+app.get('/comments', CommentController.getAllComments);
 app.get('/comments/:id', CommentController.getThisPostComments);
+app.delete('/comments/:id', checkAuth, CommentController.remove);
 
 app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
